@@ -52,9 +52,9 @@ This document tracks the tasks required to bring `docs/SPEC.md` to a "Final" sta
 
 ## Benchmarks & follow-ups
 
-- **BH1: Worker hit-logging benchmark** (new)
-  - Create a benchmarking harness that compares append-only HITS (append to log) vs per-hit KV writes under synthetic loads.
-  - Commands: a script that issues N concurrent requests, measures p50/p95 latency, and captures error rates/cost estimates.
+- **BH1: Worker hit-logging benchmark** [Completed]
+  - Create a benchmarking harness that compares append-only HITS (append to log) vs per-hit KV writes under synthetic loads. (Added `benchmarks/harness`, `run_all.sh`, analysis and docs.)
+  - Commands: a script that issues N concurrent requests, measures p50/p95 latency, and captures error rates/cost estimates.  (Next: run full-scale benchmark, add cost accounting, and finalize decision in `docs/benchmarks/worker-hit-logging.md`)
 
 - **BH2: Background stats recompute job** (new)
   - Implement a separate service to consume HITS and produce `stats` snapshots. Include acceptance tests for idempotency and correctness.
