@@ -25,5 +25,6 @@ repos:
     rev: v0.9.0
     hooks:
       - id: shellcheck
+        name: shellcheck (shell scripts)
         args: ['-x']
-        files: '\.(sh|bats)$'
+        types: [shell]
