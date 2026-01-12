@@ -27,21 +27,17 @@ done
 cargo run -p bench-harness -- --url "http://127.0.0.1:$PORT/ok-code" --concurrency 10 --requests $REQUESTS --out "$RESULTS_DIR/bh2-append.json"
 
 # run local aggregator prototype (simulate consumption and aggregation)
-python3 - <<'PY'
-import json,sys
-from crates.rlinks_bh2.src.lib import aggregate_hits
-# Note: this is a placeholder; real BH2 will consume append log format
+python3 - <<PY
+import json
+# Fallback aggregator in pure Python (no Rust import) — suitable for smoke tests
 with open('$RESULTS_DIR/bh2-append.json') as f:
     d = json.load(f)
-# Extract a simple list of codes (this harness uses /ok-code endpoint; simulate codes)
-hits = [("ok-code", i) for i in range(len(d.get('latencies',[])))]
-
-agg = {}
-for code,_ in hits:
-    agg[code] = agg.get(code,0)+1
-
+# The bench-harness output contains an array of latencies; we use its length as hit count
+count = len(d.get('latencies', []))
+# For this smoke test the endpoint is single code 'ok-code'
+agg = {'ok-code': count}
 with open('$RESULTS_DIR/bh2-agg.json','w') as out:
-    json.dump({'agg':agg,'count':len(hits)}, out)
+    json.dump({'agg': agg, 'count': count}, out)
 print('Saved $RESULTS_DIR/bh2-agg.json')
 PY
 

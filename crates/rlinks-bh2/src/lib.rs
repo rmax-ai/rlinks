@@ -28,7 +28,7 @@ mod tests {
 
     #[test]
     fn empty_is_empty() {
-        let hits: Vec<(String,u64)> = vec![];
+        let hits: Vec<(String, u64)> = vec![];
         let agg = aggregate_hits(&hits);
         assert!(agg.is_empty());
     }
