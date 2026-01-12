@@ -21,12 +21,18 @@ for p in json_files:
     if len(parts) < 3:
         continue
     mode, concurrency, repeat = parts[0], parts[1], parts[2]
+    # skip aggregated or helper files like bh2-agg-... where concurrency isn't numeric
+    try:
+        concurrency_i = int(concurrency)
+        repeat_i = int(repeat)
+    except ValueError:
+        continue
     with open(p) as f:
         d = json.load(f)
     rows.append({
         'mode': mode,
-        'concurrency': int(concurrency),
-        'repeat': int(repeat),
+        'concurrency': concurrency_i,
+        'repeat': repeat_i,
         'p50_ms': d.get('p50_ms'),
         'p95_ms': d.get('p95_ms'),
         'p99_ms': d.get('p99_ms'),

@@ -26,20 +26,15 @@ done
 # run harness to generate hits
 cargo run -p bench-harness -- --url "http://127.0.0.1:$PORT/ok-code" --concurrency 10 --requests $REQUESTS --out "$RESULTS_DIR/bh2-append.json"
 
-# run local aggregator prototype (simulate consumption and aggregation)
-python3 - <<PY
-import json
-# Fallback aggregator in pure Python (no Rust import) — suitable for smoke tests
-with open('$RESULTS_DIR/bh2-append.json') as f:
-    d = json.load(f)
-# The bench-harness output contains an array of latencies; we use its length as hit count
-count = len(d.get('latencies', []))
-# For this smoke test the endpoint is single code 'ok-code'
-agg = {'ok-code': count}
-with open('$RESULTS_DIR/bh2-agg.json','w') as out:
-    json.dump({'agg': agg, 'count': count}, out)
-print('Saved $RESULTS_DIR/bh2-agg.json')
-PY
+# run local aggregator using rlinks-bh2 CLI
+if cargo run -p rlinks-bh2 -- aggregate --in "$RESULTS_DIR/bh2-append.json" --out "$RESULTS_DIR/bh2-agg.json" --code ok-code; then
+  echo "Saved $RESULTS_DIR/bh2-agg.json"
+else
+  echo "rlinks-bh2 aggregation failed" >&2
+  cat "$RESULTS_DIR/server-append.log" >&2 || true
+  kill $pid || true
+  exit 1
+fi
 
 # stop server
 kill $pid || true
