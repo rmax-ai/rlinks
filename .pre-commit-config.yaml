@@ -1,0 +1,29 @@
+# pre-commit configuration for this repository
+# - Rust: ensure code is formatted and lints are clean
+# - Shell: run shellcheck on shell scripts
+
+repos:
+  - repo: local
+    hooks:
+      - id: cargo-fmt
+        name: cargo fmt (check)
+        entry: cargo fmt --all -- --check
+        language: system
+        pass_filenames: false
+        files: '\.rs$'
+        always_run: true
+
+      - id: cargo-clippy
+        name: cargo clippy (deny warnings)
+        entry: cargo clippy --all-targets -- -D warnings
+        language: system
+        pass_filenames: false
+        files: '\.rs$'
+        always_run: true
+
+  - repo: https://github.com/pre-commit/mirrors-shellcheck
+    rev: v0.9.0
+    hooks:
+      - id: shellcheck
+        args: ['-x']
+        files: '\.(sh|bats)$'
