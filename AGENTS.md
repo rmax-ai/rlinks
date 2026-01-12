@@ -129,6 +129,16 @@ Owner & contact hints
 
 - Primary identity fields are present in created_by; contact the person in created_by (for example max@rmax.ai) for policy/approval questions.
 
+Bench: worker-hit-logging guidance (BH1 follow-ups)
+
+- Purpose: Run full, reproducible experiments comparing `append` vs `kv` hit-logging designs and produce a concise decision report (p50/p95/p99, rps, errors, cost estimate, and recommendation).
+- Reproducibility: always capture and record the runtime environment when running benchmarks: `uname -a`, CPU count (`nproc`/`sysctl -n hw.ncpu`), `rustc --version`, `cargo --version`, and the exact command-line used (including `REQUESTS`, `PORT`, and `--kv-latency-ms` if used). Save this metadata next to results (e.g., `results/env.json`).
+- Resource limits: avoid running large `REQUESTS` on shared CI runners; prefer a dedicated machine or worker VM. If you must run on CI, use a smaller request count and label the results as "CI-smoke".
+- Result handling: commit only summarized artifacts (aggregated CSV, representative JSON, and a short report). Avoid committing many large raw JSONs or plots unless asked; archive them in a `results/archives/` folder with a small README explaining how to reproduce.
+- Failure mode: if the HTTP server crashes or >1% error rate appears at low concurrency (1 or 10), capture server logs (`server-*.log`), `dmesg`/syslog if available, and a short stacktrace; do not proceed until root cause is clear.
+- Extensions: when asked, extend harness to support multiple codes, skewed distributions, or using external load tools (wrk/hey); document any additional system dependencies and keep runs repeatable (seed RNGs, keep deterministic sleeps).
+- Commit & branch policy: create a local branch named `bench/worker-hits-full-run` for full experiments and commits; do not push or open PRs without explicit permission.
+
 If in doubt
 
 - Ask a concise clarifying question and do not take risky actions.

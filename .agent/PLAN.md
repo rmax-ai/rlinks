@@ -52,10 +52,20 @@ This document tracks the tasks required to bring `docs/SPEC.md` to a "Final" sta
 
 ## Benchmarks & follow-ups
 
-- **BH1: Worker hit-logging benchmark** (new)
-  - Create a benchmarking harness that compares append-only HITS (append to log) vs per-hit KV writes under synthetic loads.
-  - Commands: a script that issues N concurrent requests, measures p50/p95 latency, and captures error rates/cost estimates.
+- **BH1: Worker hit-logging benchmark** [Completed]
+  - Create a benchmarking harness that compares append-only HITS (append to log) vs per-hit KV writes under synthetic loads. (Added `benchmarks/harness`, `run_all.sh`, analysis and docs.)
+  - Commands: a script that issues N concurrent requests, measures p50/p95 latency, and captures error rates/cost estimates.  (Next: run full-scale benchmark, add cost accounting, and finalize decision in `docs/benchmarks/worker-hit-logging.md`)
+  - **Follow-up:** Full run executed (REQUESTS=5000, repeats=3) locally; artifacts saved to `benchmarks/results/` (`summary-agg.csv`, `p95_vs_concurrency.png`, representative JSONs). Next action: BH2 (background stats job) implementation and detailed cost accounting.
 
-- **BH2: Background stats recompute job** (new)
+  **Reflection (short):**
+  - Actions: ran `cargo test --workspace`; collected environment metadata; executed `REQUESTS=5000` runs for `append` and `kv` modes across concurrencies [1,10,50,100,500] with 3 repeats; analyzed results and generated `summary-agg.csv` and plots.
+  - Verification evidence: tests passed; artifacts present in `benchmarks/results/`; commits: `a227fc8` (bench results) and `215536b` (benchmark docs).
+  - Findings: `append` is equal-or-better at low-to-moderate concurrency; both modes show severe latency and errors at concurrency=500 (append: 694 errors / 5000; kv: 273 / 5000).
+  - Learnings & suggestions: add BH2 (background aggregation), include KV per-write cost modeling, re-run on representative infra, and add server resource profiling at high concurrency to diagnose saturation.
+  - Date: 2026-01-12 (agent)
+
+- **BH2: Background stats recompute job** (in progress, claimed by agent)
   - Implement a separate service to consume HITS and produce `stats` snapshots. Include acceptance tests for idempotency and correctness.
   - Consider reconciliation paths (rebuild from HITS) and a retention policy for HITS.
+  - **Notes:** Branch `bench/bh2-background-aggregation` created; initial docs `docs/benchmarks/bh2.md` scaffolded. Prototype step executed: in-memory aggregator + smoke harness worked using a fallback pure-Python aggregator. **Blocker:** direct Rust↔Python integration (importing the crate from Python) failed; plan: either expose a CLI/JSON output from `rlinks-bh2` or build a small Python wrapper; follow-up task created.
+  **Reflection (BH2 progress):** Implemented a simple CLI aggregator (`rlinks-bh2 aggregate`) and added integration tests validating JSON I/O. Wrote a small wrapper in `benchmarks/run_bh2.sh` to invoke the CLI; verified smoke run (REQUESTS=1000) and ran representative experiments (REQUESTS=5000, concurrencies 1,10,50,100, repeats=3). Artifacts are in `benchmarks/results/` and include `summary-agg.csv` and `p95_vs_concurrency.png`. Tests pass (`cargo test --workspace`). The CLI approach is a pragmatic alternative to embedding Rust directly in Python; next steps: add idempotency E2E tests, schedule aggregator as a background job, and add cost modeling for KV writes vs batched writes.

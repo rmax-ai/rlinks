@@ -3,4 +3,5 @@ members = [
     "crates/rlinks-core",
     "crates/rlinks-cli",
     "crates/rlinks-worker",
+    "benchmarks/harness", "crates/rlinks-bh2",
 ]
