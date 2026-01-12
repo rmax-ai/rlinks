@@ -16,6 +16,7 @@ Quick rules (start here)
 8. Security: never print or commit secrets. Use .env.example and only run integration tests against dedicated dev KV namespaces.
 9. Performance guardrails: keep the edge path O(1), single KV lookup, and sub-10ms. Don’t add heavy work on the hot path.
 10. When running shell commands use a timeout wrapper for potentially long-running commands and the workdir parameter if available.
+11. Single-tasking & reflection: work on one atomic task at a time. If a change requires multiple steps, create a todo list (todowrite) and keep exactly one item as in_progress. After completing the task and verifying it (tests, lsp_diagnostics, and other evidence), write a short self-reflection summarizing the actions taken, verification evidence, suggestions, and learnings; mark the task complete and "call it a day" (do not start new work unless explicitly instructed).
 
 Agent roles & how to behave
 
