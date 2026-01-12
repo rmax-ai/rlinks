@@ -64,6 +64,7 @@ This document tracks the tasks required to bring `docs/SPEC.md` to a "Final" sta
   - Learnings & suggestions: add BH2 (background aggregation), include KV per-write cost modeling, re-run on representative infra, and add server resource profiling at high concurrency to diagnose saturation.
   - Date: 2026-01-12 (agent)
 
-- **BH2: Background stats recompute job** (new)
+- **BH2: Background stats recompute job** (in progress, claimed by agent)
   - Implement a separate service to consume HITS and produce `stats` snapshots. Include acceptance tests for idempotency and correctness.
   - Consider reconciliation paths (rebuild from HITS) and a retention policy for HITS.
+  - **Notes:** Branch `bench/bh2-background-aggregation` created; initial docs `docs/benchmarks/bh2.md` scaffolded. Prototype step next; if blocked, leave findings and next steps in `.agent/PLAN.md` and stop.
