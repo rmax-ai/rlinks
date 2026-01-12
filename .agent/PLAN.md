@@ -67,4 +67,4 @@ This document tracks the tasks required to bring `docs/SPEC.md` to a "Final" sta
 - **BH2: Background stats recompute job** (in progress, claimed by agent)
   - Implement a separate service to consume HITS and produce `stats` snapshots. Include acceptance tests for idempotency and correctness.
   - Consider reconciliation paths (rebuild from HITS) and a retention policy for HITS.
-  - **Notes:** Branch `bench/bh2-background-aggregation` created; initial docs `docs/benchmarks/bh2.md` scaffolded. Prototype step next; if blocked, leave findings and next steps in `.agent/PLAN.md` and stop.
+  - **Notes:** Branch `bench/bh2-background-aggregation` created; initial docs `docs/benchmarks/bh2.md` scaffolded. Prototype step executed: in-memory aggregator + smoke harness worked using a fallback pure-Python aggregator. **Blocker:** direct Rust↔Python integration (importing the crate from Python) failed; plan: either expose a CLI/JSON output from `rlinks-bh2` or build a small Python wrapper; follow-up task created.
