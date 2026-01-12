@@ -1,0 +1,9 @@
+[package]
+name = "rlinks-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rlinks-core = { path = "../rlinks-core" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"

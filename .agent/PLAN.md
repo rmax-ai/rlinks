@@ -4,10 +4,12 @@ This document tracks the tasks required to bring `docs/SPEC.md` to a "Final" sta
 
 ## Status: In Progress
 
+**Recent progress:** PoC implemented: `crates/rlinks-core`, `crates/rlinks-cli`, and `crates/rlinks-worker` exist and unit tests pass across the workspace. T2 has been decided: **append-only HITS + batch stats** (see `docs/DECISIONS/worker-hit-logging.md`). Next: add benchmark and background stats tasks.
+
 | ID | Task | Status | Owner |
 |---|---|---|---|
 | T1 | Consolidate Reserved Codes | [ ] | - |
-| T2 | Refine Worker Hit Logic | [ ] | - |
+| T2 | Refine Worker Hit Logic | [Decided] | - |
 | T3 | Define Error Responses | [ ] | - |
 | T4 | Formalize Schema Migration Path | [ ] | - |
 | T5 | CLI Command Specification | [ ] | - |
@@ -47,3 +49,13 @@ This document tracks the tasks required to bring `docs/SPEC.md` to a "Final" sta
 - **T7: Final Consistency Pass**
   - Ensure `SPEC.md` aligns perfectly with `schema.md`, `DEVELOPMENT.md`, and `operations.md`.
   - Remove "Three actionable next steps" once implementation begins.
+
+## Benchmarks & follow-ups
+
+- **BH1: Worker hit-logging benchmark** (new)
+  - Create a benchmarking harness that compares append-only HITS (append to log) vs per-hit KV writes under synthetic loads.
+  - Commands: a script that issues N concurrent requests, measures p50/p95 latency, and captures error rates/cost estimates.
+
+- **BH2: Background stats recompute job** (new)
+  - Implement a separate service to consume HITS and produce `stats` snapshots. Include acceptance tests for idempotency and correctness.
+  - Consider reconciliation paths (rebuild from HITS) and a retention policy for HITS.

@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "crates/rlinks-core",
+    "crates/rlinks-cli",
+    "crates/rlinks-worker",
+]
