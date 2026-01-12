@@ -28,15 +28,10 @@ Agent roles & how to behave
 Where to start (file checklist)
 
 - Docs index: docs/INDEX.md — table of contents and quick cross-references.
-- High level: README.md
-- Rules & invariants: docs/GUIDELINES.md
-- Development rules: docs/DEVELOPMENT.md
-- Specification & behavior: docs/SPEC.md (also docs/schema.md)
-- Architecture: docs/architecture.md
-- Operations & incident handling: docs/operations.md and docs/failure-modes.md
-- Security constraints: docs/security.md
-- Roadmap & guardrails: docs/roadmap.md
-- Bootstrap prompt and developer intent: .agent/prompts/bootstrap.prompt.md
+- Core documents: `README.md`, `docs/GUIDELINES.md`, `docs/DEVELOPMENT.md`, `docs/SPEC.md`.
+- Agent state: `.agent/PLAN.md` — current task list and progress.
+- Workflow: `.agent/WORKFLOW.md` — rules for agent operation.
+- Bootstrap: `.agent/prompts/bootstrap.prompt.md` — developer intent.
 
 Key invariants (must be preserved)
 
