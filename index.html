@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rlinks - Identity-Grade Redirect Infrastructure</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔗</text></svg>">
+</head>
+<body>
+    <header class="hero">
+        <div class="container">
+            <h1>rlinks</h1>
+            <p class="tagline">rlinks keeps <code>rmax.to</code> redirects eternal, safe, and observable.</p>
+            <p class="subtext">
+                Typed redirect objects • CLI control plane • Cloudflare edge runtime • &lt;10ms global latency
+            </p>
+            <div class="cta-group">
+                <a href="https://github.com/rmax-ai/rlinks/tree/main/docs/architecture.md" class="btn primary">Read the architecture</a>
+                <a href="https://github.com/rmax-ai/rlinks/tree/main/docs/schema.md" class="btn secondary">Inspect the schema</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="about">
+            <h2>What is rlinks?</h2>
+            <p>
+                rlinks is the authoritative control plane and global edge runtime for the <code>rmax.to</code> redirect fabric.
+                It is an identity infrastructure system, not a marketing shortener or multi-tenant SaaS.
+            </p>
+            <p>
+                It provides a typed, schema-first redirect system managed via a CLI-first workflow, ensuring strict safety guarantees for high-value links.
+            </p>
+        </section>
+
+        <section id="architecture">
+            <h2>Architecture & Planes</h2>
+            <div class="ascii-art">
+Terraform (Infra)
+      ↓
+Cloudflare Platform
+      ↓
+rlinks CLI (Control) → KV (Storage) → Worker (Runtime) → Internet
+            </div>
+            <p>
+                The system is divided into strict responsibility planes:
+            </p>
+            <ul>
+                <li><strong>Infrastructure Plane:</strong> Managed by Terraform.</li>
+                <li><strong>Control Plane:</strong> The rlinks CLI handles validation and mutation.</li>
+                <li><strong>Runtime Plane:</strong> Stateless Cloudflare Workers serving from KV at the edge.</li>
+            </ul>
+        </section>
+
+        <section id="lifecycle">
+            <h2>Redirect Lifecycle & Schema</h2>
+            <p>
+                Every redirect is a typed object that moves through a strict lifecycle:
+                Creation via CLI → Validation → KV Write → Worker Lookup → Hit Logging → Disable/Rotate.
+            </p>
+            <p>
+                The schema enforces invariants (no loops, no reserved words, HTTPS only) and supports forward-only versioning.
+                Key fields include:
+            </p>
+            <ul>
+                <li><code>v</code>: Schema version</li>
+                <li><code>code</code>: The short path</li>
+                <li><code>target</code>: Destination URL</li>
+                <li><code>rules</code>: Routing logic</li>
+                <li><code>stats</code>: Observability metrics</li>
+            </ul>
+        </section>
+
+        <section id="safety">
+            <h2>Safety Guarantees</h2>
+            <p>
+                We treat redirects as critical infrastructure. Our safety guarantees include:
+            </p>
+            <ul class="feature-list">
+                <li><strong>No Loops:</strong> Strictly enforced by validation logic.</li>
+                <li><strong>Reserved Names:</strong> Critical paths cannot be overwritten.</li>
+                <li><strong>Disable-over-Delete:</strong> History is preserved; bad links are disabled, not erased.</li>
+                <li><strong>Append-only Logs:</strong> Full audit trail of hits and mutations.</li>
+                <li><strong>No Silent Failures:</strong> All errors are explicit.</li>
+            </ul>
+        </section>
+
+        <section id="cli">
+            <h2>CLI & Operations</h2>
+            <p>
+                The rlinks CLI is the only approved way to mutate state. It enforces the write pipeline:
+                <code>rlinks-cli</code> → <code>rlinks-core</code> → <code>rlinks-kv</code> → <code>Cloudflare KV</code>.
+            </p>
+            <pre class="code-block">
+# Create a new redirect
+rlinks set --code "infra" --target "https://github.com/rmax-ai/infra"
+
+# Disable a redirect
+rlinks disable "infra"
+
+# Inspect redirect details
+rlinks get "infra" --json
+            </pre>
+        </section>
+
+        <section id="development">
+            <h2>Development & Contribution</h2>
+            <p>
+                Developers must adhere to strict guidelines:
+            </p>
+            <ul>
+                <li><strong>Schema-First:</strong> All changes start with the schema.</li>
+                <li><strong>Invariants:</strong> Tests must verify safety guarantees.</li>
+                <li><strong>Local Dev:</strong> Use local Cloudflare KV emulation; no direct production KV writes.</li>
+                <li><strong>Performance:</strong> Respect runtime guardrails (<10ms target).</li>
+            </ul>
+            <p>
+                Review <a href="https://github.com/rmax-ai/rlinks/tree/main/docs/GUIDELINES.md">GUIDELINES.md</a> and <a href="https://github.com/rmax-ai/rlinks/tree/main/docs/DEVELOPMENT.md">DEVELOPMENT.md</a> before contributing.
+                Standard <code>cargo test</code>, <code>clippy</code>, and <code>fmt</code> rules apply.
+            </p>
+        </section>
+
+        <section id="roadmap">
+            <h2>Roadmap</h2>
+            <p>Planned capabilities for the rlinks fabric:</p>
+            <ul>
+                <li>Analytics pipeline</li>
+                <li>Canary routing</li>
+                <li>Temporal redirects</li>
+                <li>Signed links</li>
+                <li>Geo-aware routing</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p class="quote">“Links are part of identity. Infrastructure must be boring.”</p>
+            <p class="copyright">
+                &copy; 2025-2026 rmax.ai • Internal Tooling • <a href="LICENSE">License</a>
+            </p>
+            <p class="note">CLI and Worker versions must agree on schema before release.</p>
+        </div>
+    </footer>
+</body>
+</html>
