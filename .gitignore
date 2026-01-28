@@ -34,3 +34,4 @@ hits.log
 .env
 .envrc
 .env.*
+logs/loop_state.json
