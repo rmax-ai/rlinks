@@ -25,6 +25,8 @@ Completing core specification and adding integration testing.
 ## Active Work
 
 - 🔄 Finalizing `docs/SPEC.md` (T1-T7 in `.agent/PLAN.md`)
+ - ✅ Consolidated Reserved Codes (T1 completed)
+ - 🔄 Finalizing remaining SPEC tasks (T2-T7 in `.agent/PLAN.md`)
 - 🔄 Setting up integration test infrastructure
 
 ## Metrics

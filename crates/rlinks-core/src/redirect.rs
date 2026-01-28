@@ -28,7 +28,7 @@ pub fn validate_redirect(r: &Redirect) -> Result<(), ValidationError> {
         return Err(ValidationError::InvalidCode);
     }
 
-    // reserved words
+    // reserved words (documented in docs/SPEC.md Reserved Codes)
     let reserved = ["api", "admin", "www"];
     if reserved.contains(&r.code.as_str()) {
         return Err(ValidationError::ReservedCode);

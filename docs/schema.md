@@ -107,6 +107,7 @@ Constraints:
 * Lowercase
 * `[a-z0-9-]+`
 * No reserved words (`api`, `admin`, `www`)
+* Reserved codes are documented in `docs/SPEC.md` — update both files when changing the list
 * Max length: 64
 
 Immutable after creation.
@@ -320,4 +321,3 @@ See also:
 - [SPEC](./SPEC.md)
 - [DEVELOPMENT](./DEVELOPMENT.md)
 - [GUIDELINES](./GUIDELINES.md)
-

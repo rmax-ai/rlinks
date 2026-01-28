@@ -234,6 +234,24 @@ Never individual redirect records.
 
 ---
 
+## Reserved Codes
+
+Certain path segments are reserved and may not be claimed as redirect codes. This prevents accidental collisions with infrastructure and admin functionality.
+
+Reserved codes (canonical list):
+
+- `api` — reserved for programmatic endpoints and tooling
+- `admin` — reserved for administrative interfaces
+- `www` — reserved to avoid conflicts with subdomain-style redirects
+
+Rationale:
+
+- These values appear in the codebase and in validation rules enforced by the CLI and core library; documenting them here makes the invariant explicit for operators and auditors.
+- Blocking these values prevents redirect loops, accidental exposure of control endpoints, and namespace pollution.
+
+If additional reserved codes are required in the future, they MUST be added to this list, the schema validation rules, and corresponding unit tests.
+
+
 ## Three actionable next steps
 
 1. Implement the Worker using the above flow.
@@ -247,4 +265,3 @@ See also:
 - [operations](./operations.md)
 - [DEVELOPMENT](./DEVELOPMENT.md)
 - [security](./security.md)
-

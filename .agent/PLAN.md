@@ -8,7 +8,7 @@ This document tracks the tasks required to bring `docs/SPEC.md` to a "Final" sta
 
 | ID | Task | Status | Owner |
 |---|---|---|---|
-| T1 | Consolidate Reserved Codes | [>] | @orchestrator |
+| T1 | Consolidate Reserved Codes | [x] | @orchestrator |
 | T2 | Refine Worker Hit Logic | [Decided] | - |
 | T3 | Define Error Responses | [ ] | - |
 | T4 | Formalize Schema Migration Path | [ ] | - |

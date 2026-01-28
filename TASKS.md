@@ -17,7 +17,7 @@ This file provides a comprehensive view of all project tasks, organized by categ
 ### Schema & Data Model
 - [x] Define base redirect schema (`docs/schema.md`)
 - [x] Implement RedirectRecord struct in rlinks-core
- - [>] Finalize reserved words and validation rules (See PLAN.md T1) — In progress by @orchestrator
+ - [x] Finalize reserved words and validation rules (See PLAN.md T1) — Completed by @orchestrator
 - [ ] Document schema migration tooling (See PLAN.md T4)
 
 ### CLI (rlinks)
