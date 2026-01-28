@@ -8,7 +8,7 @@ This document tracks the tasks required to bring `docs/SPEC.md` to a "Final" sta
 
 | ID | Task | Status | Owner |
 |---|---|---|---|
-| T1 | Consolidate Reserved Codes | [ ] | - |
+| T1 | Consolidate Reserved Codes | [>] | @orchestrator |
 | T2 | Refine Worker Hit Logic | [Decided] | - |
 | T3 | Define Error Responses | [ ] | - |
 | T4 | Formalize Schema Migration Path | [ ] | - |
@@ -19,9 +19,11 @@ This document tracks the tasks required to bring `docs/SPEC.md` to a "Final" sta
 ## Task Details
 
 - **T1: Consolidate Reserved Codes**
-  - Identify all reserved words (api, admin, www, etc.)
-  - Document them in `docs/SPEC.md` Section 3 (Namespaces) or a new Section 12.
-  - Cross-reference with `docs/schema.md`.
+  - Identify all reserved words (api, admin, www, etc.) by scanning docs and codebase
+  - Produce a definitive list and rationale for each reserved code
+  - Document them in `docs/SPEC.md` Section 3 (Namespaces) (or add new Section 12) with exact wording
+  - Cross-reference and add validation rules to `docs/schema.md`
+  - Acceptance criteria: SPEC.md contains a Reserved Codes section, schema.md references the same list, and TASKS.md marks the work as in-progress/completed when done
 
 - **T2: Refine Worker Hit Logic**
   - `SPEC.md` currently suggests Worker increments `stats` on the `Route` object.
