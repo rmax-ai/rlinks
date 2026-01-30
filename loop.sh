@@ -104,26 +104,41 @@ check_git_status() {
   return 0 # Clean or not a git repo
 }
 
-# Process activity monitoring using ps
+# Process activity monitoring using ps with CPU sampling over time
 monitor_process_activity() {
   local pid=$1
   local timeout=$2
   local last_activity=$(date +%s)
 
   while kill -0 "$pid" 2>/dev/null; do
-    sleep "$ACTIVITY_CHECK_INTERVAL"
+    local NOW=$(date +%s)
 
-    # Check if process is active (using CPU)
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-      CPU_USAGE=$(ps -p "$pid" -o %cpu= 2>/dev/null | awk '{print int($1)}' || echo 0)
-    else
-      CPU_USAGE=$(ps -p "$pid" -o %cpu= 2>/dev/null | awk '{print int($1)}' || echo 0)
-    fi
+    # Sample CPU usage over the last ACTIVITY_CHECK_INTERVAL seconds
+    local samples=()
+    local sample_interval=1
+    local num_samples=$ACTIVITY_CHECK_INTERVAL
 
-    NOW=$(date +%s)
+    for ((j = 0; j < num_samples; j++)); do
+      local CPU_USAGE
+      if [[ "$OSTYPE" == "darwin"* ]]; then
+        CPU_USAGE=$(ps -p "$pid" -o %cpu= 2>/dev/null | awk '{print $1}' || echo 0)
+      else
+        CPU_USAGE=$(ps -p "$pid" -o %cpu= 2>/dev/null | awk '{print $1}' || echo 0)
+      fi
+      samples+=("$CPU_USAGE")
+      sleep "$sample_interval"
+    done
 
-    # If process is using CPU or logs are being written, update activity time
-    if ((CPU_USAGE > 0)); then
+    # Compute average CPU usage
+    local sum=0
+    for s in "${samples[@]}"; do
+      sum=$(awk "BEGIN {print $sum + $s}")
+    done
+    local avg
+    avg=$(awk "BEGIN {print $sum / ${#samples[@]}}")
+
+    # If average CPU > 0.1%, consider the process active
+    if awk "BEGIN {exit !($avg > 0.1)}"; then
       last_activity=$NOW
     fi
 
