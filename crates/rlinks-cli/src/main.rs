@@ -27,6 +27,9 @@ fn main() {
 }
 
 #[cfg(test)]
+mod integration_tests;
+
+#[cfg(test)]
 mod tests {
     use super::run;
 
