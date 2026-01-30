@@ -2,19 +2,19 @@
 
 This document tracks the tasks required to bring `docs/SPEC.md` to a "Final" state for implementation.
 
-## Status: In Progress
+## Status: Complete
 
-**Recent progress:** PoC implemented: `crates/rlinks-core`, `crates/rlinks-cli`, and `crates/rlinks-worker` exist and unit tests pass across the workspace. T2 has been decided: **append-only HITS + batch stats** (see `docs/DECISIONS/worker-hit-logging.md`). Next: add benchmark and background stats tasks.
+**Recent progress:** `SPEC.md` has been fully consolidated. All sub-tasks (T1-T7) are complete. The spec now serves as the authoritative guide for the remaining implementation (CLI, Worker, Integration).
 
 | ID | Task | Status | Owner |
 |---|---|---|---|
-| T1 | Consolidate Reserved Codes | [x] | @orchestrator |
-| T2 | Refine Worker Hit Logic | [Decided] | - |
-| T3 | Define Error Responses | [ ] | - |
-| T4 | Formalize Schema Migration Path | [ ] | - |
-| T5 | CLI Command Specification | [ ] | - |
-| T6 | Integration Points | [ ] | - |
-| T7 | Final Consistency Pass | [ ] | - |
+| | T1 | Consolidate Reserved Codes | [x] | @orchestrator |
+| | T2 | Refine Worker Hit Logic | [x] | @orchestrator |
+| | T3 | Define Error Responses | [x] | @orchestrator |
+| | T4 | Formalize Schema Migration Path | [x] | @orchestrator |
+| | T5 | CLI Command Specification | [x] | @orchestrator |
+| | T6 | Integration Points | [x] | @orchestrator |
+| | T7 | Final Consistency Pass | [x] | @orchestrator |
 
 ## Task Details
 

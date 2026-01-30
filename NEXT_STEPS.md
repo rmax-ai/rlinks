@@ -6,7 +6,7 @@ This file tracks the immediate next actions for the rlinks project. The orchestr
 
 ## High-Leverage Tasks (Pick One Per Iteration)
 
-1. [ ] **Complete SPEC.md consolidation** - Address tasks T1-T7 in `.agent/PLAN.md` (T1: Consolidate Reserved Codes completed)
+1. [x] **Complete SPEC.md consolidation** - Address tasks T1-T7 in `.agent/PLAN.md` (T1-T7 completed)
    - Define reserved codes explicitly
    - Document error response formats
    - Formalize schema migration paths

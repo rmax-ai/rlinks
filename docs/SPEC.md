@@ -117,14 +117,14 @@ Worker executes:
 3. If not found or `status != active` → 404
 4. If `expires_at < now` → 410
 5. If `no_loop` and target points to rmax.to → 500
-6. Log hit asynchronously (append-only):
-
+6. **Async Logging**: Dispatch a non-blocking write to KV `HITS` namespace:
    ```
    hit:{code}:{YYYYMMDD}:{uuid}
    ```
+   *This is a fire-and-forget operation to ensure <10ms response time.*
 7. Return `301 Location: obj.target`
 
-*Note: The Worker does not update `stats` in KV. Stats are computed asynchronously from hit logs.*
+*Note: The Worker **never** modifies the `route` object or its `stats` field. Stats are computed asynchronously by a background process to avoid write contention and latency on the hot path.*
 
 ---
 
@@ -155,16 +155,47 @@ Used for:
 
 Binary: `rmax`
 
+### Global Flags
+
+* `--json`: Output results as JSON.
+* `--env <name>`: Target environment (default: `production`).
+
 ### Commands
 
-```
-rmax links list
-rmax links get parity
-rmax links set parity https://paritybench.rmax.tech
-rmax links disable parity
-rmax links delete parity
-rmax links stats parity
-```
+#### `rmax links list`
+
+List defined routes.
+
+* `--prefix <str>`: Filter codes starting with string.
+* `--limit <n>`: Max records to return (default: 50).
+* `--show-disabled`: Include disabled routes.
+
+#### `rmax links get <code>`
+
+Retrieve the full JSON object for a specific route.
+
+#### `rmax links set <code> <url>`
+
+Create or update a route.
+
+* `--no-https`: Disable `https_only` enforcement.
+* `--allow-loop`: Disable `no_loop` enforcement (use with caution).
+* `--expires <iso8601>`: Set an expiration timestamp.
+* `--note <text>`: Update metadata note.
+* `--tag <text>`: Add a metadata tag (repeatable).
+
+#### `rmax links disable <code>`
+
+Set status to `disabled`. The route will return 404 immediately.
+
+#### `rmax links delete <code>`
+
+**Destructive**. Permanently removes the route object from KV.
+*Prefer `disable` for audit trails.*
+
+#### `rmax links stats <code>`
+
+Retrieve derived statistics (hit counts, last seen) for a route.
 
 ---
 
@@ -179,15 +210,15 @@ rmax links set parity https://x
 The CLI:
 
 1. Fetches existing `route:parity`
-2. Validates:
+2. **Migration**: If `v < CURRENT_VERSION`, upgrades object structure in memory.
+3. Validates:
 
-   * URL
-   * HTTPS
-   * No loops
-   * Reserved words
-3. Computes new object
-4. Sets `updated_at`
-5. Writes back to KV
+   * URL syntax
+   * HTTPS (unless `--no-https`)
+   * No loops (unless `--allow-loop`)
+   * Reserved words (cannot create `api`, `admin`, etc.)
+4. Computes new object state (updating `updated_at`, `v`).
+5. Writes back to KV (`route:parity`).
 6. Emits an audit hit:
 
    ```
@@ -277,7 +308,7 @@ Operators: these response shapes are normative for clients and tests. Update CLI
 
 ---
 
-## Reserved Codes
+## 13. Reserved Codes
 
 Certain path segments are reserved and may not be claimed as redirect codes. This prevents accidental collisions with infrastructure and admin functionality.
 
@@ -295,11 +326,24 @@ Rationale:
 If additional reserved codes are required in the future, they MUST be added to this list, the schema validation rules, and corresponding unit tests.
 
 
-## Three actionable next steps
+## 12. Analytics & Data Consumption
 
-1. Implement the Worker using the above flow.
-2. Create the `rmax` CLI skeleton (list/get/set/disable).
-3. Stand up the two KV namespaces and wire IAM.
+The system produces two streams of event data:
+
+1.  **Traffic Hits**: `hit:{code}:{date}:{uuid}` (high volume)
+2.  **Audit Logs**: `hit:__admin__:{date}:{uuid}` (low volume)
+
+### Consumption Model
+
+Since Cloudflare KV is not optimized for list/scan operations, analytics are derived via:
+
+1.  **Batch Export**: Periodic export of `hit:*` keys to an external data warehouse (e.g. via R2 or massive batch reads).
+2.  **Stats Recomputation**: A background maintenance job that:
+    -   Scans recent hits
+    -   Aggregates counts
+    -   Updates `route:{code}` → `stats` field (eventual consistency)
+
+Consumers must tolerate a delay between a hit occurring and it appearing in `rmax links stats`.
 
 ---
 
