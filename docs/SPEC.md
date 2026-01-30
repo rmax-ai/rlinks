@@ -117,13 +117,14 @@ Worker executes:
 3. If not found or `status != active` → 404
 4. If `expires_at < now` → 410
 5. If `no_loop` and target points to rmax.to → 500
-6. Log hit:
+6. Log hit asynchronously (append-only):
 
    ```
    hit:{code}:{YYYYMMDD}:{uuid}
    ```
-7. Increment `stats.hits` and `stats.last_hit`
-8. Return `301 Location: obj.target`
+7. Return `301 Location: obj.target`
+
+*Note: The Worker does not update `stats` in KV. Stats are computed asynchronously from hit logs.*
 
 ---
 
@@ -231,6 +232,48 @@ Never individual redirect records.
 | Disabled       | 404      |
 | Expired        | 410      |
 | Loop detected  | 500      |
+
+Error response formats
+
+When the Worker returns an error status (4xx/5xx) it MUST return a machine-readable JSON body for API clients and a small, human-friendly HTML page for browsers. The Worker's behavior is as follows:
+
+- If the request includes an Accept header that prefers `application/json` (or the request is to an API-style path), return Content-Type: application/json and a JSON error object (see example below).
+- Otherwise return Content-Type: text/html with a concise HTML page containing the status and a short human-oriented message.
+
+Standard JSON error envelope
+
+```json
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "status": 404,
+    "message": "Requested redirect code not found",
+    "details": null,
+    "ts": "2026-01-29T12:34:56Z"
+  }
+}
+```
+
+Guidelines for fields:
+
+- code: short machine identifier (e.g. NOT_FOUND, EXPIRED, LOOP_DETECTED, KV_UNAVAILABLE).
+- status: the numeric HTTP status code.
+- message: human-readable description suitable for logs and diagnostics.
+- details: optional object or string with implementation-level information (avoid leaking secrets).
+- ts: ISO-8601 timestamp of the error event.
+
+HTML fallback
+
+Return a minimal HTML page with the status code and message for browser clients. HTML pages MUST not contain any sensitive details (stack traces, tokens, or internal IDs).
+
+Examples
+
+- 404 (Missing code) — JSON: {error.code: "NOT_FOUND", status: 404}
+- 410 (Expired) — JSON: {error.code: "EXPIRED", status: 410}
+- 500 (Loop detected) — JSON: {error.code: "LOOP_DETECTED", status: 500}
+- 503 (KV unavailable) — JSON: {error.code: "KV_UNAVAILABLE", status: 503}
+
+Operators: these response shapes are normative for clients and tests. Update CLI error handling and unit tests to assert on the JSON envelope when the client requests JSON responses.
 
 ---
 
