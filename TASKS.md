@@ -18,7 +18,7 @@ This file provides a comprehensive view of all project tasks, organized by categ
 - [x] Define base redirect schema (`docs/schema.md`)
 - [x] Implement RedirectRecord struct in rlinks-core
  - [x] Finalize reserved words and validation rules (See PLAN.md T1) — Completed by @orchestrator
-- [ ] Document schema migration tooling (See PLAN.md T4)
+- [x] Document schema migration tooling (See PLAN.md T4) — Completed in SPEC.md and operations.md
 
 ### CLI (rlinks)
 - [x] Basic CRUD operations (create, get, update, delete)
@@ -44,7 +44,7 @@ This file provides a comprehensive view of all project tasks, organized by categ
 - [x] Architecture overview (`docs/architecture.md`)
 - [x] Development guidelines (`docs/DEVELOPMENT.md`)
 - [x] Security model (`docs/security.md`)
-- [>] Complete specification (`docs/SPEC.md` - see PLAN.md)
+- [x] Complete specification (`docs/SPEC.md` - see PLAN.md)
 - [ ] API reference documentation
 - [ ] User guide / quickstart
 
@@ -53,16 +53,16 @@ This file provides a comprehensive view of all project tasks, organized by categ
 - [x] Unit tests for core library
 - [x] Unit tests for CLI
 - [x] Unit tests for Worker
-- [ ] Integration tests (CLI + KV)
+- [>] Integration tests (CLI + KV)
 - [ ] E2E tests (Worker request flow)
 - [ ] Property-based tests for validation
 - [ ] Performance benchmarks
 
 ## Operations
 
-- [ ] Deployment runbook
+- [x] Deployment runbook (docs/operations.md)
 - [ ] Incident response procedures
-- [ ] Backup and recovery procedures
+- [x] Backup and recovery procedures (docs/operations.md)
 - [ ] Cost monitoring setup
 
 ## Future Enhancements
