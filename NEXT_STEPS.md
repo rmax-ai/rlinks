@@ -1,37 +1,43 @@
 # Next Steps
 
-**Last Updated:** 2026-01-28
+**Last Updated:** 2026-01-31
 
 This file tracks the immediate next actions for the rlinks project. The orchestrator loop reads this file at the start of each iteration to determine what work to do next.
 
 ## High-Leverage Tasks (Pick One Per Iteration)
 
-1. [x] **Complete SPEC.md consolidation** - Address tasks T1-T7 in `.agent/PLAN.md` (T1-T7 completed)
+1. [x] **Add integration tests for CLI** - Ensure CLI commands work end-to-end (Basic validation tests added)
+   - [x] Create integration test framework
+   - [x] Test validation rules (HTTP, reserved codes)
+   - [ ] Test real CRUD operations (requires mocking or dev KV)
+
+2. [x] **Complete SPEC.md consolidation** - Address tasks T1-T7 in `.agent/PLAN.md` (T1-T7 completed)
    - Define reserved codes explicitly
    - Document error response formats
    - Formalize schema migration paths
    - Specify CLI command details
 
-2. [ ] **Add integration tests for CLI** - Ensure CLI commands work end-to-end
-   - Test against dev KV namespace
-   - Cover create/update/delete/get operations
-   - Verify validation rules
-
-3. [ ] **Document Worker deployment** - Complete operational runbook
-   - Add deployment checklist to `docs/operations.md`
-   - Document rollback procedures
-   - Add monitoring setup guide
+3. [x] **Document Worker deployment** - Complete operational runbook
+   - [x] Add deployment checklist to `docs/operations.md`
+   - [x] Document rollback procedures
+   - [x] Add monitoring setup guide
 
 4. [ ] **Implement CLI analytics** - Add hit log querying capabilities
    - Design query interface
    - Implement pagination
    - Add export formats (JSON, CSV)
 
+5. [ ] **Worker Implementation** - Begin implementation of `rlinks-worker`
+   - Scaffolding with `wrangler`
+   - Implement `rlinks-core` integration
+   - Connect to KV
+
 ## Recently Completed
 
-(Track completed work here)
+- Documented Worker deployment, rollback, and monitoring procedures in `docs/operations.md`.
+- Consolidated `SPEC.md`.
 
-## Blocked
+## Blockers
 
 (List any tasks waiting on external dependencies or decisions)
 

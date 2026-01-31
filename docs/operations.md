@@ -32,12 +32,64 @@ Never share KV between environments.
 
 ### Worker
 
-1. Build Worker
-2. Deploy via Terraform or Wrangler
-3. Validate on a canary route
-4. Promote to production
+1. **Pre-flight Check**:
+   - Run `cargo test --workspace` to ensure core logic and validation are sound.
+   - Verify `wrangler.toml` points to the correct entry point and account ID.
+   - Check that `rlinks-core` version matches `package.json` or `wrangler.toml` compatibility date if applicable.
 
-Worker deployments must never modify KV data.
+2. **Staging / Preview**:
+   - Run `wrangler dev` locally to sanity check the build.
+   - Deploy to a staging environment (if configured) or use `wrangler deploy --dry-run` to verify config.
+   - Verify a known "canary" route (e.g., `rmax.to/health` or a test code) resolves correctly.
+
+3. **Production Deployment**:
+   - Execute: `wrangler deploy`
+   - **Verify**: Immediately run `rlinks get <code>` on a known active route and `curl -I https://rmax.to/<code>` to confirm availability.
+   - **Observe**: Watch Cloudflare Worker "Real-time Logs" for 1-2 minutes to catch instant crash loops.
+
+Worker deployments must never modify KV data implicitly.
+
+### Rollback Procedures
+
+If a deployment introduces a regression (e.g., 500 errors, broken redirects):
+
+1. **Immediate Revert**:
+   - Use Wrangler's rollback command: `wrangler rollback <version-id>` (or redeploy the previous known-good git commit).
+   - This reverts the *code* but leaves *data* (KV) untouched.
+
+2. **Schema Conflicts**:
+   - If the bad deployment involved a schema change, ensure the old worker code can tolerate the new data shape (forward-only compatibility).
+   - If data corruption occurred (rare, as workers are read-mostly), refer to "Backup & Recovery" to restore the `ROUTES` namespace.
+
+3. **Verification**:
+   - After rollback, verify critical paths:
+     - `curl -I https://rmax.to/<code>` (Redirects work)
+     - `rlinks get <code>` (CLI can still read KV)
+
+---
+
+## Monitoring & Observability
+
+Reliability relies on visibility. Use the Cloudflare Dashboard and internal logs.
+
+### Key Metrics (Cloudflare Dashboard)
+
+Monitor these signals in **Workers & Pages > rlinks > Metrics**:
+
+1. **Requests**: Baseline traffic volume. Sudden drops suggest DNS/routing issues.
+2. **Error Rate (5xx)**: Should be < 0.1%. Spikes indicate logic errors or KV unavailability.
+   - *Alert*: Configure Cloudflare Notification for "Worker Errors > 1%".
+3. **CPU Time**: Should be < 10ms average. Spikes indicate inefficient logic or serialization issues.
+4. **KV Read/Write Operations**: Ensure usage aligns with traffic. High writes suggest a bug in the stats/logging logic.
+
+### Logs
+
+1. **Hit Logs** (KV `HITS` namespace):
+   - Source of truth for traffic analytics.
+   - Check `hit:__admin__:*` for recent mutation trails during incidents.
+
+2. **Live Tail**:
+   - Use `wrangler tail` during active debugging to see console logs and exceptions in real-time.
 
 ---
 
