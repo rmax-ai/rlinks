@@ -23,6 +23,7 @@ This file provides a comprehensive view of all project tasks, organized by categ
 ### CLI (rlinks)
 - [x] Basic CRUD operations (create, get, update, delete)
 - [x] Validation and error handling
+- [x] Integrate with rlinks-kv
 - [ ] Batch operations support
 - [ ] Analytics/hit log querying
 - [ ] Export/import functionality

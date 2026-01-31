@@ -10,6 +10,11 @@ Adding integration testing for the CLI to ensure end-to-end reliability.
 
 ## Recent Accomplishments
 
+### Week of 2026-01-31
+- ✅ Updated `rlinks-cli` to use `rlinks-kv` for persistent storage (Cloudflare KV).
+- ✅ Added support for CLI arguments and environment variables (CF_ACCOUNT_ID, CF_NAMESPACE_ID, CF_API_TOKEN) for KV credentials.
+- ✅ Updated `crates/rlinks-cli/src/integration_tests.rs` to verify CLI logic including validation and CRUD.
+
 ### Week of 2026-01-30
 - ✅ Completed operational runbook in `docs/operations.md` (Deployment, Rollback, Monitoring).
 - ✅ Consolidated `SPEC.md` tasks (T1-T7 complete).

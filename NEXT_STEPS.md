@@ -6,23 +6,22 @@ This file tracks the immediate next actions for the rlinks project. The orchestr
 
 ## High-Leverage Tasks (Pick One Per Iteration)
 
-1. [ ] **Update CLI to use rlinks-kv** - Wire up the CLI to the real KV store
-   - Add `rlinks-kv` dependency to `rlinks-cli`
-   - Implement `KvStore` integration in CLI commands
-   - Add flags for KV credentials (or env var support)
+1. [ ] **Worker Implementation** - Begin implementation of `rlinks-worker`
+   - Scaffolding with `wrangler`
+   - Implement `rlinks-core` integration
+   - Connect to KV
 
 2. [ ] **Implement CLI analytics** - Add hit log querying capabilities
    - Design query interface
    - Implement pagination
    - Add export formats (JSON, CSV)
 
-3. [ ] **Worker Implementation** - Begin implementation of `rlinks-worker`
-   - Scaffolding with `wrangler`
-   - Implement `rlinks-core` integration
-   - Connect to KV
+3. [ ] **Integration Tests for CLI+KV** - Ensure CLI works with real/mocked KV
+   - Extend `integration_tests.rs` to mock KV responses or use a test namespace
 
 ## Recently Completed
 
+- Updated CLI to use `rlinks-kv` and support env/flag credentials.
 - Created `rlinks-kv` crate with Cloudflare KV integration.
 - Documented Worker deployment, rollback, and monitoring procedures in `docs/operations.md`.
 - Consolidated `SPEC.md`.
