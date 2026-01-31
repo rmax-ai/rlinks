@@ -6,34 +6,24 @@ This file tracks the immediate next actions for the rlinks project. The orchestr
 
 ## High-Leverage Tasks (Pick One Per Iteration)
 
-1. [x] **Add integration tests for CLI** - Ensure CLI commands work end-to-end (Basic validation tests added)
-   - [x] Create integration test framework
-   - [x] Test validation rules (HTTP, reserved codes)
-   - [ ] Test real CRUD operations (requires mocking or dev KV)
+1. [ ] **Update CLI to use rlinks-kv** - Wire up the CLI to the real KV store
+   - Add `rlinks-kv` dependency to `rlinks-cli`
+   - Implement `KvStore` integration in CLI commands
+   - Add flags for KV credentials (or env var support)
 
-2. [x] **Complete SPEC.md consolidation** - Address tasks T1-T7 in `.agent/PLAN.md` (T1-T7 completed)
-   - Define reserved codes explicitly
-   - Document error response formats
-   - Formalize schema migration paths
-   - Specify CLI command details
-
-3. [x] **Document Worker deployment** - Complete operational runbook
-   - [x] Add deployment checklist to `docs/operations.md`
-   - [x] Document rollback procedures
-   - [x] Add monitoring setup guide
-
-4. [ ] **Implement CLI analytics** - Add hit log querying capabilities
+2. [ ] **Implement CLI analytics** - Add hit log querying capabilities
    - Design query interface
    - Implement pagination
    - Add export formats (JSON, CSV)
 
-5. [ ] **Worker Implementation** - Begin implementation of `rlinks-worker`
+3. [ ] **Worker Implementation** - Begin implementation of `rlinks-worker`
    - Scaffolding with `wrangler`
    - Implement `rlinks-core` integration
    - Connect to KV
 
 ## Recently Completed
 
+- Created `rlinks-kv` crate with Cloudflare KV integration.
 - Documented Worker deployment, rollback, and monitoring procedures in `docs/operations.md`.
 - Consolidated `SPEC.md`.
 
