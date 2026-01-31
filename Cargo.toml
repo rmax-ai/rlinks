@@ -2,5 +2,5 @@
 members = [
     "crates/rlinks-core",
     "crates/rlinks-cli",
-    "crates/rlinks-worker",
+    "crates/rlinks-worker", "crates/rlinks-kv",
 ]
