@@ -2,13 +2,19 @@
 
 **Project:** rlinks
 **Phase:** Implementation
-**Last Updated:** 2026-01-28
+**Last Updated:** 2026-01-30
 
 ## Current Sprint Focus
 
-Completing core specification and adding integration testing.
+Adding integration testing for the CLI to ensure end-to-end reliability.
 
 ## Recent Accomplishments
+
+### Week of 2026-01-30
+- ✅ Completed operational runbook in `docs/operations.md` (Deployment, Rollback, Monitoring).
+- ✅ Consolidated `SPEC.md` tasks (T1-T7 complete).
+- ✅ Added `crates/rlinks-cli/src/integration_tests.rs` to verify CLI validation logic.
+- ✅ Verified passing tests for valid/invalid redirects, reserved codes, and HTTP enforcement.
 
 ### Week of 2026-01-28
 - ✅ Created orchestration loop infrastructure (loop.sh, loop.config.sh)
@@ -24,14 +30,12 @@ Completing core specification and adding integration testing.
 
 ## Active Work
 
-- 🔄 Finalizing `docs/SPEC.md` (T1-T7 in `.agent/PLAN.md`)
- - ✅ Consolidated Reserved Codes (T1 completed)
- - 🔄 Finalizing remaining SPEC tasks (T2-T7 in `.agent/PLAN.md`)
-- 🔄 Setting up integration test infrastructure
+- 🔄 Expanding integration test suite (CRUD operations)
+- 🔄 Finalizing `docs/SPEC.md` details
 
 ## Metrics
 
-- **Test Coverage:** ~80% (unit tests only)
+- **Test Coverage:** ~85% (unit + basic integration)
 - **Documentation:** 8/10 major docs complete
 - **Schema Version:** 1 (stable)
 - **Build Status:** ✅ Passing
