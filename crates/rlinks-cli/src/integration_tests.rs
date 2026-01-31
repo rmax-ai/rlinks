@@ -29,8 +29,8 @@ fn run_cli(args: &[&str]) -> (bool, String, String) {
 }
 
 #[test]
-fn test_create_valid_redirect() {
-    let (success, stdout, _) = run_cli(&["test-code", "https://example.com"]);
+fn test_validate_valid_redirect() {
+    let (success, stdout, _) = run_cli(&["validate", "test-code", "https://example.com"]);
     assert!(success, "CLI should succeed for valid redirect");
 
     let json: Value = serde_json::from_str(&stdout).expect("Output should be valid JSON");
@@ -39,8 +39,8 @@ fn test_create_valid_redirect() {
 }
 
 #[test]
-fn test_create_invalid_redirect_reserved() {
-    let (success, _, stderr) = run_cli(&["api", "https://example.com"]);
+fn test_validate_invalid_redirect_reserved() {
+    let (success, _, stderr) = run_cli(&["validate", "api", "https://example.com"]);
     assert!(!success, "CLI should fail for reserved code");
     assert!(
         stderr.contains("Validation error"),
@@ -49,8 +49,8 @@ fn test_create_invalid_redirect_reserved() {
 }
 
 #[test]
-fn test_create_invalid_redirect_url() {
-    let (success, _, stderr) = run_cli(&["valid-code", "not-a-url"]);
+fn test_validate_invalid_redirect_url() {
+    let (success, _, stderr) = run_cli(&["validate", "valid-code", "not-a-url"]);
     assert!(!success, "CLI should fail for invalid URL");
     assert!(
         stderr.contains("Validation error"),
@@ -59,9 +59,9 @@ fn test_create_invalid_redirect_url() {
 }
 
 #[test]
-fn test_create_invalid_redirect_http() {
+fn test_validate_invalid_redirect_http() {
     // By default HTTP is not allowed
-    let (success, _, _stderr) = run_cli(&["valid-code", "http://example.com"]);
+    let (success, _, _stderr) = run_cli(&["validate", "valid-code", "http://example.com"]);
     assert!(!success, "CLI should fail for HTTP URL without flag");
     // Note: The current CLI implementation in main.rs doesn't seem to expose flags yet,
     // but the core validation might enforce it.
